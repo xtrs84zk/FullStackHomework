@@ -1,16 +1,37 @@
-import { memo } from "react";
-import { Link } from "react-router-dom";
+import { memo, useMemo } from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { LOGIN, MANAGE_PATH, REWARDS } from "../../constants";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const Header = () => {
   const { isAuthenticated, logout } = useAuth();
+
+  const { pathname } = useLocation();
+
+  const paths = useMemo(() => (
+    isAuthenticated ? [
+      { path: REWARDS, label: "Rewards" },
+      { path: MANAGE_PATH, label: "Manage Rewards" },
+      { label: "Logout", onClick: () => logout(), path: undefined }
+    ] : [
+      { path: LOGIN, label: "Login" },
+    ]), [isAuthenticated]);
+
+  const value = useMemo(() => paths.findIndex(({ path }) => path === pathname), [pathname, paths]);
   return (
     <header className="App-header">
-      {isAuthenticated === false && <Link to={LOGIN}>Login</Link>}
-      <Link to={REWARDS}>Rewards</Link>
-      <Link to={MANAGE_PATH}>Manage Rewards</Link>
-      {isAuthenticated === true && <button onClick={logout}>Logout</button>}
+      <Tabs value={value} aria-label="basic tabs example">
+        {
+          paths.map(({ path, label, onClick }) => {
+            if (onClick) {
+              return <Tab key={label} label={label} onClick={onClick} />
+            }
+            return <Tab key={path} label={label} component={RouterLink} to={path} />
+          })
+        }
+      </Tabs>
     </header>
   )
 }

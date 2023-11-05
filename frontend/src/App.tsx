@@ -3,6 +3,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/auth';
 import { LOGIN, MANAGE_PATH, REWARDS } from './constants';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ThemedRouter from './components/ThemedRouter';
 import LoginPage from './routes/Login';
 import RewardsPage from './routes/Rewards';
 import ManageRewardsPage from './routes/Rewards/Manage';
@@ -14,7 +15,7 @@ function App() {
   return (
     <div className="App">
       <AuthProvider>
-        <BrowserRouter>
+        <ThemedRouter>
           <Header />
           <Routes>
             <Route path={LOGIN} element={<LoginPage />} />
@@ -30,7 +31,7 @@ function App() {
             } />
             <Route path='*' element={<NotFoundPage />} />
           </Routes>
-        </BrowserRouter>
+        </ThemedRouter>
       </AuthProvider>
     </div>
   );

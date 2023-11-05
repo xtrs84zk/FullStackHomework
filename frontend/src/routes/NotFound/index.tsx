@@ -1,7 +1,13 @@
 import React from "react";
+import { Container } from "./styles";
+import { Typography } from "@mui/material";
 
 const NotFoundPage = () => {
-  return <div>Not Found Page</div>;
+  return <Container>
+    <Typography variant="h2">
+      Not Found
+    </Typography>
+  </Container>;
 };
 
 export default NotFoundPage;
