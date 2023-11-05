@@ -19,8 +19,8 @@ const initialState = {
 
 type AuthAction = { type: 'LOGIN', payload: { token: string, user: string } } | { type: 'LOGOUT' };
 
-const AuthContext = createContext<{ state: AuthContext; login: (token: string, user: string) => void; logout: () => void }>({
-  state: initialState,
+const AuthContext = createContext<AuthContext & { login: (token: string, user: string) => void; logout: () => void }>({
+  ...initialState,
   login: () => { },
   logout: () => { },
 });
@@ -52,7 +52,7 @@ const AuthProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const logout = useCallback(() => dispatch({ type: 'LOGOUT' }), [dispatch]);
 
-  const value = useMemo(() => ({ state, login, logout }), [state, login, logout]);
+  const value = useMemo(() => ({ ...state, login, logout }), [state, login, logout]);
 
   return (
     <AuthContext.Provider value={value}>
@@ -61,10 +61,6 @@ const AuthProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 }
 
-export const useAuthState = () => useContext(AuthContext).state;
-
-export const useLogin = () => useContext(AuthContext).login;
-
-export const useLogout = () => useContext(AuthContext).logout;
+export const useAuth = () => useContext(AuthContext);
 
 export { AuthContext, AuthProvider };
