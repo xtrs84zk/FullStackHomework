@@ -1,5 +1,5 @@
 
-import React, { createContext, FC, useContext, useMemo, useReducer } from "react";
+import React, { createContext, FC, useCallback, useContext, useMemo, useReducer } from "react";
 
 type AuthContext = {
   isAuthenticated: false;
@@ -19,9 +19,10 @@ const initialState = {
 
 type AuthAction = { type: 'LOGIN', payload: { token: string, user: string } } | { type: 'LOGOUT' };
 
-const AuthContext = createContext<{ state: AuthContext; dispatch: React.Dispatch<AuthAction>; }>({
+const AuthContext = createContext<{ state: AuthContext; login: (token: string, user: string) => void; logout: () => void }>({
   state: initialState,
-  dispatch: () => null,
+  login: () => { },
+  logout: () => { },
 });
 
 const reducer = (state: AuthContext, action: AuthAction): AuthContext => {
@@ -47,7 +48,11 @@ const reducer = (state: AuthContext, action: AuthAction): AuthContext => {
 const AuthProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const value = useMemo(() => ({ state, dispatch }), [state]);
+  const login = useCallback((token: string, user: string) => dispatch({ type: 'LOGIN', payload: { token, user } }), [dispatch]);
+
+  const logout = useCallback(() => dispatch({ type: 'LOGOUT' }), [dispatch]);
+
+  const value = useMemo(() => ({ state, login, logout }), [state, login, logout]);
 
   return (
     <AuthContext.Provider value={value}>
@@ -56,6 +61,10 @@ const AuthProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 }
 
-export const useAuth = () => useContext(AuthContext).state;
+export const useAuthState = () => useContext(AuthContext).state;
+
+export const useLogin = () => useContext(AuthContext).login;
+
+export const useLogout = () => useContext(AuthContext).logout;
 
 export { AuthContext, AuthProvider };

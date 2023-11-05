@@ -1,10 +1,10 @@
 import React from "react";
-import { useAuth } from "../../context/auth";
+import { useAuthState } from "../../context/auth";
 import { Navigate } from "react-router-dom";
 import { REWARDS } from "../../constants";
 
 const LoginPage = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthState();
   if (isAuthenticated) {
     return <div>
       <h1>Already logged in</h1>
