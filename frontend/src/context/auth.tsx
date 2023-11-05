@@ -7,7 +7,7 @@ type AuthContext = {
   token: null;
 } | {
   isAuthenticated: true;
-  user: string;
+  user: null;
   token: string;
 }
 
@@ -17,9 +17,9 @@ const initialState = {
   token: null,
 } satisfies AuthContext;
 
-type AuthAction = { type: 'LOGIN', payload: { token: string, user: string } } | { type: 'LOGOUT' };
+type AuthAction = { type: 'LOGIN', payload: { token: string } } | { type: 'LOGOUT' };
 
-const AuthContext = createContext<AuthContext & { login: (token: string, user: string) => void; logout: () => void }>({
+const AuthContext = createContext<AuthContext & { login: (token: string) => void; logout: () => void }>({
   ...initialState,
   login: () => { },
   logout: () => { },
@@ -28,12 +28,12 @@ const AuthContext = createContext<AuthContext & { login: (token: string, user: s
 const reducer = (state: AuthContext, action: AuthAction): AuthContext => {
   switch (action.type) {
     case 'LOGIN': {
-      const { token, user } = action.payload;
+      const { token } = action.payload;
       return {
         ...state,
         isAuthenticated: true,
         token,
-        user,
+        user: null,
       };
     }
     case 'LOGOUT': {
@@ -48,7 +48,7 @@ const reducer = (state: AuthContext, action: AuthAction): AuthContext => {
 const AuthProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const login = useCallback((token: string, user: string) => dispatch({ type: 'LOGIN', payload: { token, user } }), [dispatch]);
+  const login = useCallback((token: string) => dispatch({ type: 'LOGIN', payload: { token } }), [dispatch]);
 
   const logout = useCallback(() => dispatch({ type: 'LOGOUT' }), [dispatch]);
 

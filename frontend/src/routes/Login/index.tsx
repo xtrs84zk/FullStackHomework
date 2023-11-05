@@ -12,7 +12,10 @@ const LoginPage = () => {
       <Navigate to={REWARDS} replace={true} />
     </div>;
   }
-  return <div>Login Page</div>;
+  return <div>
+    <h1>Login Page</h1>
+    <button onClick={() => login("fake-token")}>Login</button>
+  </div>;
 };
 
 export default LoginPage;
