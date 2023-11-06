@@ -14,7 +14,7 @@ const Header = () => {
     isAuthenticated ? [
       { path: REWARDS, label: "Rewards" },
       { path: MANAGE_PATH, label: "Manage" },
-      { label: "Logout", onClick: () => logout(), path: undefined }
+      { label: "Logout", onClick: logout, path: undefined }
     ] : [
       { path: REWARDS, label: "Rewards" },
       { path: LOGIN, label: "Login" },
