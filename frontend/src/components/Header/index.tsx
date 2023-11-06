@@ -20,7 +20,7 @@ const Header = () => {
       { path: LOGIN, label: "Login" },
     ]), [isAuthenticated]);
 
-  const value = useMemo(() => Math.max(paths.findIndex(({ path }) => path === pathname), 0), [pathname, paths]);
+  const value = useMemo(() => paths.findIndex(({ path }) => path === pathname), [pathname, paths]);
 
   return (
     <header className="App-header">
