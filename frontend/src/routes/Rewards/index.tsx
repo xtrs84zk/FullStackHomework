@@ -17,8 +17,8 @@ const columns: GridColDef[] = [
     disableColumnMenu: true,
     renderCell: (params) => (
       <CellImage
-        src={params.value as string}
-        alt={params.value as string}
+        src={params.value}
+        alt={params.row.name}
         height="100%"
       />
     ),

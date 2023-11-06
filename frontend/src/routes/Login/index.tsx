@@ -1,12 +1,24 @@
-import React from "react";
+import { useCallback, useState } from "react";
 import { useAuth } from "../../context/auth";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { REWARDS } from "../../constants";
 import { Container } from "./styles";
-import { Button, Typography } from "@mui/material";
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const { isAuthenticated, login } = useAuth();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onLogin = useCallback(async (username: string) => {
+    await login(username);
+    navigate(REWARDS, { replace: true });
+  }, [navigate, login]);
+
   if (isAuthenticated) {
     return <Container>
       <Typography variant="h4">Already logged in</Typography>
@@ -15,8 +27,21 @@ const LoginPage = () => {
     </Container>;
   }
   return <Container>
-    <Typography variant="h2">Login Page</Typography>
-    <Button variant="contained" onClick={() => login("fake-token")}>Login</Button>
+    <Box
+      component="form"
+      sx={{
+        '& .MuiTextField-root': { m: 1, width: '25ch' },
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      noValidate
+    >
+      <TextField id="outlined-basic" label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} />
+      <TextField id="outlined-basic" label="Password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} type="password" autoComplete="current-password" />
+      <Button variant="contained" onClick={() => onLogin(username)}>Login</Button>
+    </Box>
   </Container>;
 };
 
