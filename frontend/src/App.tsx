@@ -2,7 +2,7 @@ import './App.css';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/auth';
 import { LOGIN, MANAGE_PATH, REWARDS } from './constants';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import ThemedRouter from './components/ThemedRouter';
 import LoginPage from './routes/Login';
 import RewardsPage from './routes/Rewards';
