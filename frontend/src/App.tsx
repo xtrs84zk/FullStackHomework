@@ -8,7 +8,7 @@ import { Routes, Route } from 'react-router-dom';
 import ThemedRouter from './components/ThemedRouter';
 import LoginPage from './routes/Login';
 import RewardsPage from './routes/Rewards';
-import ManageRewardsPage from './routes/Rewards/Manage';
+import ManageRewardsPage from './routes/Manage';
 import NotFoundPage from './routes/NotFound';
 import Header from './components/Header';
 
@@ -22,11 +22,7 @@ function App() {
             <Header />
             <Routes>
               <Route path={LOGIN} element={<LoginPage />} />
-              <Route index path={REWARDS} element={
-                <ProtectedRoute>
-                  <RewardsPage />
-                </ProtectedRoute>
-              } />
+              <Route index path={REWARDS} element={<RewardsPage />} />
               <Route path={MANAGE_PATH} element={
                 <ProtectedRoute>
                   <ManageRewardsPage />

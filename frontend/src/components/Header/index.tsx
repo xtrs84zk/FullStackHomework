@@ -13,13 +13,15 @@ const Header = () => {
   const paths = useMemo(() => (
     isAuthenticated ? [
       { path: REWARDS, label: "Rewards" },
-      { path: MANAGE_PATH, label: "Manage Rewards" },
+      { path: MANAGE_PATH, label: "Manage" },
       { label: "Logout", onClick: () => logout(), path: undefined }
     ] : [
+      { path: REWARDS, label: "Rewards" },
       { path: LOGIN, label: "Login" },
     ]), [isAuthenticated]);
 
-  const value = useMemo(() => paths.findIndex(({ path }) => path === pathname), [pathname, paths]);
+  const value = useMemo(() => Math.max(paths.findIndex(({ path }) => path === pathname), 0), [pathname, paths]);
+
   return (
     <header className="App-header">
       <Tabs value={value} aria-label="basic tabs example">

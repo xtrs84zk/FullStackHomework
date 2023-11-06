@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import { Container } from "./styles";
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
-import { useMutableRewards } from "../../../hooks/rewards";
-import { CellImage } from "../styles";
+import { useMutableRewards } from "../../hooks/rewards";
+import { CellImage } from "../Rewards/styles";
 import LinearProgress from '@mui/material/LinearProgress';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Reward } from "../../../types";
+import { Reward } from "../../types";
 
 const ManageRewardsPage = () => {
   const {
