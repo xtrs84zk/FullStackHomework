@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import { Container } from "./styles";
+import { Container, DeleteIcon } from "./styles";
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import { useMutableRewards } from "../../hooks/rewards";
 import { CellImage } from "../Rewards/styles";
 import LinearProgress from '@mui/material/LinearProgress';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { Reward } from "../../types";
+import { toast } from "sonner";
 
 const ManageRewardsPage = () => {
   const {
@@ -64,7 +64,13 @@ const ManageRewardsPage = () => {
       headerAlign: 'center',
       width: 50,
       getActions: ({ row }: Partial<GridRowParams<Reward>>) => [
-        <DeleteIcon onClick={() => remove(row!)} />
+        <DeleteIcon onClick={() => {
+          toast.promise(remove(row!), {
+            loading: 'Removing reward...',
+            success: 'Reward removed!',
+            error: 'Failed to remove reward',
+          });
+        }} />
       ]
     }
   ] satisfies GridColDef[], [remove]);
