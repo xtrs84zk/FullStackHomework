@@ -8,7 +8,8 @@ export const useRewards = () => {
   return { rewards, loading };
 }
 
-export const useMutableRewards = () => { 
+export const useMutableRewards = () => {
+  const { rewards, loading } = useRewards();
   const dispatch = useAppDispatch();
 
   const add = (reward: Reward) => {
@@ -16,19 +17,10 @@ export const useMutableRewards = () => {
     dispatch(addReward(reward));
   }
 
-  const set = (rewards: Reward[]) => { 
-    dispatch(setRewards(rewards));
-  };
-
-  const remove = (id: Reward['id']) => { 
+  const remove = (id: Reward['id']) => {
     // TODO: Remove reward from backend
     dispatch(removeReward(id));
   };
 
-  const update = (reward: Reward) => { 
-    // TODO: Update reward in backend
-    dispatch(updateReward(reward));
-  };
-
-  return { add, set, remove, update };
+  return { add, remove, rewards, loading };
 };
