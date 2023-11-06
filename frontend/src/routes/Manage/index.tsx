@@ -64,7 +64,7 @@ const ManageRewardsPage = () => {
       headerAlign: 'center',
       width: 50,
       getActions: ({ row }: Partial<GridRowParams<Reward>>) => [
-        <DeleteIcon onClick={() => remove(row!.id)} />
+        <DeleteIcon onClick={() => remove(row!)} />
       ]
     }
   ] satisfies GridColDef[], [remove]);

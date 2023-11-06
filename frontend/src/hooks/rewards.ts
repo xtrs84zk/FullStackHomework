@@ -1,6 +1,7 @@
 import { useAppSelector, useAppDispatch } from ".";
-import { addReward, removeReward, setRewards, updateReward } from "../redux/slices/rewards";
+import { addReward, removeReward } from "../redux/slices/rewards";
 import { Reward } from "../types";
+import { toast } from 'sonner';
 
 export const useRewards = () => {
   const { rewards, loading } = useAppSelector((state) => state.rewards);
@@ -17,7 +18,8 @@ export const useMutableRewards = () => {
     dispatch(addReward(reward));
   }
 
-  const remove = (id: Reward['id']) => {
+  const remove = ({id, name}: Reward) => {
+    toast.success(`'${name}' removed.`);
     // TODO: Remove reward from backend
     dispatch(removeReward(id));
   };
