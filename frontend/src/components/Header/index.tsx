@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { ComponentProps, memo, useMemo } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { LOGIN, MANAGE_PATH, REWARDS } from "../../constants";
@@ -29,11 +29,18 @@ const Header = () => {
     <header className="App-header">
       <Tabs value={value} aria-label="basic tabs example">
         {
-          paths.map(({ path, label, onClick }) => {
-            if (onClick) {
-              return <Tab key={label} label={label} onClick={onClick} />
+          paths.map(({ path, label, onClick }, i) => {
+            const params:ComponentProps<typeof Tab> = { key: label, label };
+            if (i === paths.length - 1) { 
+              params['sx'] = { ml: 'auto' };
             }
-            return <Tab key={path} label={label} component={RouterLink} to={path} />
+            if (onClick) {
+              params['onClick'] = onClick;
+            } else {
+              (params as any).component = RouterLink;
+              (params as any).to = path;
+            }
+            return <Tab {...params} />
           })
         }
       </Tabs>
