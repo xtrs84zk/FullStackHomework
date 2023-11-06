@@ -1,5 +1,6 @@
 import './App.css';
 import ProtectedRoute from './components/ProtectedRoute';
+import { Toaster } from 'sonner';
 import { AuthProvider } from './context/auth';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
@@ -16,6 +17,7 @@ function App() {
   // a login page, a page for managing rewards, and a page for displaying the list of rewards.
   return (
     <div className="App">
+      <Toaster />
       <AuthProvider>
         <Provider store={store}>
           <ThemedRouter>
