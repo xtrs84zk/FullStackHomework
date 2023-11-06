@@ -19,8 +19,11 @@ const Header = () => {
       { path: REWARDS, label: "Rewards" },
       { path: LOGIN, label: "Login" },
     ]), [isAuthenticated]);
-
-  const value = useMemo(() => paths.findIndex(({ path }) => path === pathname), [pathname, paths]);
+  
+  const value = useMemo(() => {
+    const index = paths.findIndex(({ path }) => path === pathname);
+    return index > -1 ? index : false;
+  }, [pathname, paths]);
 
   return (
     <header className="App-header">
