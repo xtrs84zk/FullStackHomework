@@ -23,7 +23,7 @@ You can install AWS CLI with the instructions in https://docs.aws.amazon.com/cli
 
 You can install AWS SAM CLI with the instructions in https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html
 
-The secrets have to be defined in AWS Secrets Manager. The following secrets are needed:
+The secrets have to be defined in AWS Secrets Manager. A secret named 'secret' with the following keys/value pairs is needed:
 ```bash
 MONGODB_URI # The URI to connect to the MongoDB database
 MONGODB_USER # The user to connect to the MongoDB database
