@@ -40,6 +40,13 @@ Resources:
     Properties:
       Handler: dist/handlers/login.handler
       Description: Logs in a user
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource: '*'
       Events:
         Api:
           Type: Api
@@ -54,6 +61,13 @@ Resources:
     Properties:
       Handler: dist/handlers/logout.handler
       Description: Logs out a user
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource: '*'
       Events:
         Api:
           Type: Api
@@ -68,6 +82,13 @@ Resources:
     Properties:
       Handler: dist/handlers/createReward.handler
       Description: Creates a reward in the database
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource: '*'
       Events:
         Api:
           Type: Api
@@ -82,6 +103,13 @@ Resources:
     Properties:
       Handler: dist/handlers/getRewards.handler
       Description: Gets all rewards from the database
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource: '*'
       Events:
         Api:
           Type: Api
@@ -96,6 +124,13 @@ Resources:
     Properties:
       Handler: dist/handlers/getReward.handler
       Description: Gets a reward from the database
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource: '*'
       Events:
         Api:
           Type: Api
@@ -110,6 +145,13 @@ Resources:
     Properties:
       Handler: dist/handlers/removeReward.handler
       Description: Removes a reward from the database
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource: '*'
       Events:
         Api:
           Type: Api

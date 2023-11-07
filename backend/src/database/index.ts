@@ -4,6 +4,7 @@ import { createRandomString } from '../utils/token';
 import { extractReward } from '../utils/parsing';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcryptjs';
+import { getSecret } from '../utils/secrets';
 
 let isConnected = false;
 
@@ -51,15 +52,13 @@ export const connectDatabase = async () => {
   if (isConnected) {
     return;
   }
-
-  // prepend mongodb+srv://
-  await connect(process.env.MONGODB_URI!, {
-    user: process.env.MONGODB_USER,
-    pass: process.env.MONGODB_PASSWORD,
+  const { MONGODB_URI, MONGODB_USER, MONGODB_PASSWORD } = await getSecret();
+  await connect(`mongodb+srv://${MONGODB_URI}`, {
+    user: MONGODB_USER,
+    pass: MONGODB_PASSWORD,
     dbName: 'rewards',
-    autoCreate: true,
+    autoCreate: true
   });
-
   console.log('Connected to database');
 
   const userCount = await User.countDocuments({});

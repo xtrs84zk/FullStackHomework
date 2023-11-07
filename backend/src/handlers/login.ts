@@ -25,7 +25,7 @@ export const handler = withCookies(async (event: APIGatewayProxyEvent): Promise<
   await connectDatabase();
   try {
     const user = await verifyUserByUsernameAndPassword(username, password);
-    const { token } = generateToken(user.id);
+    const { token } = await generateToken(user.id);
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Login successful', user }),

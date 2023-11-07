@@ -24,7 +24,7 @@ export function withCookies(handler: (event: APIGatewayProxyEvent) => Promise<AP
 export function withAuth(handler: (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult>) {
   return async function (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
     try {
-      verifyEventToken(event);
+      await verifyEventToken(event);
     } catch (err) {
       return {
         statusCode: 401,

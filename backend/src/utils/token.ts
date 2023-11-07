@@ -1,32 +1,26 @@
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
 import { APIGatewayProxyEvent } from 'aws-lambda';
+import { getSecret } from './secrets';
 
-
-const secret = process.env.JWT_SECRET!;
-const refreshSecret = process.env.JWT_REFRESH_SECRET!;
-
-if (!secret || !refreshSecret) {
-  throw new Error('Missing JWT_SECRET or JWT_REFRESH_SECRET environment variable');
-}
-
-export const generateToken = (userId: string) => {
+export const generateToken = async (userId: string) => {
+  const { JWT_SECRET } = await getSecret();
   const payload = { userId };
-  const token = jwt.sign(payload, secret, { expiresIn: '1h' }); // Token expires in 1 hour
-  const refreshToken = jwt.sign({ token }, refreshSecret); // Refresh token does not expire
-  return { token, refreshToken };
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' }); // Token expires in 1 hour
+  return { token };
 };
 
-export const verifyToken = (token: string) => {
+export const verifyToken = async (token: string) => {
   try {
-    const payload = jwt.verify(token, secret);
+    const { JWT_SECRET } = await getSecret();
+    const payload = jwt.verify(token, JWT_SECRET);
     return payload;
   } catch (err) {
     return null;
   }
 }
 
-export const verifyEventToken = (event: APIGatewayProxyEvent) => {
+export const verifyEventToken = async (event: APIGatewayProxyEvent) => {
   const cookieHeader = event.headers['Cookie'] || event.headers['cookie'];
   if (!cookieHeader) {
     throw new Error('UNAUTHORIZED');
@@ -42,16 +36,6 @@ export const verifyEventToken = (event: APIGatewayProxyEvent) => {
   const token = tokenCookie.split('=')[1];
   return verifyToken(token);
 };
-
-export const refreshToken = (refreshToken: string) => {
-  try {
-    jwt.verify(refreshToken, refreshSecret);
-    const { userId } = jwt.decode(refreshToken) as jwt.JwtPayload;
-    return generateToken(userId);
-  } catch (err) {
-    return null;
-  }
-}
 
 export const createRandomString = () => {
   return crypto.randomBytes(8).toString('hex');
