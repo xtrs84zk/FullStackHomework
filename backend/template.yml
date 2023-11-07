@@ -44,7 +44,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /login
+            Path: /api/login
             Method: POST
 
   CreateRewardFunction:
@@ -58,7 +58,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /rewards
+            Path: /api/rewards
             Method: POST
 
   GetRewardsFunction:
@@ -72,7 +72,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /rewards
+            Path: /api/rewards
             Method: GET
 
   GetRewardFunction:
@@ -86,7 +86,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /rewards/{id}
+            Path: /api/rewards/{id}
             Method: GET
   
   RemoveRewardFunction:
@@ -100,7 +100,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /rewards/{id}
+            Path: /api/rewards/{id}
             Method: DELETE
 
   # Shared layer with Lambda runtime dependencies
