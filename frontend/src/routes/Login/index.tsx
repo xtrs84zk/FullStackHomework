@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useAuth } from "../../context/auth";
 import { Navigate, useNavigate } from "react-router-dom";
+import { authenticate } from "../../api/auth";
 import { REWARDS } from "../../constants";
 import { Container } from "./styles";
 import Button from '@mui/material/Button';
@@ -15,11 +16,16 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const onLogin = useCallback(async (username: string) => {
-    await login(username);
-    toast.success(`Welcome ${username}!`);
-    navigate(REWARDS, { replace: true });
-  }, [navigate, login]);
+  const onLogin = useCallback(async (username: string, password: string) => {
+    try {
+      const user = await authenticate(username, password);
+      login(user);
+      navigate(REWARDS, { replace: true });
+      toast.success(`Welcome back ${user.name}`);
+    } catch (err) {
+      toast.error("Failed to login");
+    }
+  }, [login]);
 
   if (isAuthenticated) {
     return <Container>
@@ -42,7 +48,7 @@ const LoginPage = () => {
     >
       <TextField id="outlined-basic" label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} />
       <TextField id="outlined-basic" label="Password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} type="password" autoComplete="current-password" />
-      <Button variant="contained" onClick={() => onLogin(username)}>Login</Button>
+      <Button variant="contained" onClick={() => onLogin(username, password)}>Login</Button>
     </Box>
   </Container>;
 };

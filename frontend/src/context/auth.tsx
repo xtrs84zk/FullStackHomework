@@ -1,25 +1,20 @@
 
 import React, { createContext, FC, useCallback, useContext, useMemo, useReducer } from "react";
+import type { User } from "../types";
+import { USER_KEY } from "../constants";
 
-type AuthContext = {
-  isAuthenticated: false;
-  user: null;
-  token: null;
-} | {
-  isAuthenticated: true;
-  user: null;
-  token: string;
-}
+type AuthContext =
+  | { isAuthenticated: false; user: null; }
+  | { isAuthenticated: true; user: User; }
 
 const initialState = {
   isAuthenticated: false,
   user: null,
-  token: null,
 } satisfies AuthContext;
 
-type AuthAction = { type: 'LOGIN', payload: { token: string } } | { type: 'LOGOUT' };
+type AuthAction = { type: 'LOGIN', payload: { user: User } } | { type: 'LOGOUT' };
 
-const AuthContext = createContext<AuthContext & { login: (token: string) => Promise<void>; logout: () => void }>({
+const AuthContext = createContext<AuthContext & { login: (user: User) => Promise<void>; logout: () => void }>({
   ...initialState,
   login: async () => { },
   logout: () => { },
@@ -28,15 +23,16 @@ const AuthContext = createContext<AuthContext & { login: (token: string) => Prom
 const reducer = (state: AuthContext, action: AuthAction): AuthContext => {
   switch (action.type) {
     case 'LOGIN': {
-      const { token } = action.payload;
+      const { user } = action.payload;
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
       return {
         ...state,
         isAuthenticated: true,
-        token,
-        user: null,
+        user,
       };
     }
     case 'LOGOUT': {
+      localStorage.removeItem(USER_KEY);
       // TODO: remove authorization cookie
       return initialState;
     }
@@ -48,7 +44,7 @@ const reducer = (state: AuthContext, action: AuthAction): AuthContext => {
 const AuthProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const login = useCallback(async(token: string) => dispatch({ type: 'LOGIN', payload: { token } }), [dispatch]);
+  const login = useCallback(async (user: User) => dispatch({ type: 'LOGIN', payload: { user } }), [dispatch]);
 
   const logout = useCallback(() => dispatch({ type: 'LOGOUT' }), [dispatch]);
 

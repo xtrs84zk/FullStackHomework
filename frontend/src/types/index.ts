@@ -8,3 +8,8 @@ export type Reward = {
 }
 
 export type RewardPayload = Omit<Reward, 'id'>;
+
+export type User = {
+  name: string;
+  username: string;
+};

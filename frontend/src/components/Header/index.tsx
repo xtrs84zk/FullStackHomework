@@ -1,20 +1,28 @@
-import { ComponentProps, memo, useMemo } from "react";
+import { ComponentProps, memo, useCallback, useMemo } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { LOGIN, MANAGE_PATH, REWARDS } from "../../constants";
+import { deauthenticate } from "../../api/auth";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { toast } from "sonner";
 
 const Header = () => {
   const { isAuthenticated, logout } = useAuth();
 
   const { pathname } = useLocation();
 
+  const onLogout = useCallback(async () => {
+    await deauthenticate();
+    logout();
+    toast.success("See you soon!");
+  }, [logout]);
+
   const paths = useMemo(() => (
     isAuthenticated ? [
       { path: REWARDS, label: "Rewards" },
       { path: MANAGE_PATH, label: "Manage" },
-      { label: "Logout", onClick: logout, path: undefined }
+      { label: "Logout", onClick: onLogout, path: undefined }
     ] : [
       { path: REWARDS, label: "Rewards" },
       { path: LOGIN, label: "Login" },
