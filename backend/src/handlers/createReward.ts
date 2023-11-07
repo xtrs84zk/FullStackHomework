@@ -1,7 +1,8 @@
 import 'source-map-support/register';
 import { connectDatabase, createReward } from '../database';
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { isValidRewardPayload } from '../types/database';
+import { RewardPayload, isValidRewardPayload } from '../types/database';
+import { extractRewardPayload } from '../utils/parsing';
 import { withAuth } from '../utils/middleware';
 
 export const handler = withAuth(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -11,16 +12,23 @@ export const handler = withAuth(async (event: APIGatewayProxyEvent): Promise<API
       body: JSON.stringify({ message: 'Missing reward payload' }),
     };
   }
+  let payload: null | RewardPayload = null;
   try {
-    await connectDatabase();
-    const { name, category, price, description, image } = JSON.parse(event.body!);
-    const payload = { name, category, price, description, image };
+    payload = extractRewardPayload(JSON.parse(event.body));
+  } catch (err) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ message: 'Invalid reward payload' }),
+    };
+  }
+  try {
     if (!isValidRewardPayload(payload)) {
       return {
         statusCode: 400,
         body: JSON.stringify({ message: 'Invalid reward payload' }),
       };
     }
+    await connectDatabase();
     const reward = await createReward(payload);
     return {
       statusCode: 201,
@@ -32,4 +40,4 @@ export const handler = withAuth(async (event: APIGatewayProxyEvent): Promise<API
       body: JSON.stringify({ message: 'Internal server error' }),
     };
   }
-})
+});

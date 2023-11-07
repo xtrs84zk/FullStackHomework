@@ -1,6 +1,7 @@
 import { Schema, model, connect } from 'mongoose';
 import type { RewardPayload, Reward as RewardType, UserPayload, User as UserType } from '../types/database'
 import { createRandomString } from '../utils/token';
+import { extractReward } from '../utils/parsing';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 
@@ -111,10 +112,7 @@ export const createReward = async (reward: RewardPayload) => {
 
 export const getRewards = async () => {
   const rewards = await Reward.find();
-  return rewards.map(reward => {
-    const { _id, ...rest } = reward.toObject();
-    return rest;
-  });
+  return rewards.map(reward => extractReward(reward.toObject()));
 };
 
 export const getReward = async (id: string) => {
@@ -122,8 +120,7 @@ export const getReward = async (id: string) => {
   if (!reward) {
     return null;
   }
-  const { _id, ...rest } = reward.toObject();
-  return rest;
+  return extractReward(reward.toObject());
 };
 
 export const removeReward = async (id: string) => {
