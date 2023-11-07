@@ -2,11 +2,7 @@ import React from "react";
 import { CellImage, Container } from "./styles";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useRewards } from "../../hooks/rewards";
-
-/**
- * Rewards should have a name, description,
- * price, category, and image URL.
- */
+import { dataGridProps } from "../../constants";
 
 const columns: GridColDef[] = [
   {
@@ -54,9 +50,16 @@ const columns: GridColDef[] = [
 ];
 
 const RewardsPage = () => {
-  const { rewards } = useRewards();
+  const { rewards, loading } = useRewards();
   return <Container>
-    <DataGrid columns={columns} rows={rewards} disableColumnSelector />
+    <DataGrid
+      columns={columns}
+      rows={rewards}
+      disableColumnSelector
+      loading={loading}
+      initialState={dataGridProps.initialState}
+      slots={dataGridProps.slots}
+    />
   </Container>;
 };
 

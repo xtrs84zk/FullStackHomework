@@ -3,8 +3,8 @@ import { Container, DeleteIcon, Footer } from "./styles";
 import { DataGrid, GridColDef, GridPagination, GridRowParams } from '@mui/x-data-grid';
 import CreateRewardDialog from "../../components/CreateRewardDialog";
 import { useMutableRewards } from "../../hooks/rewards";
+import { dataGridProps } from "../../constants";
 import { CellImage } from "../Rewards/styles";
-import LinearProgress from '@mui/material/LinearProgress';
 import { Reward } from "../../types";
 import { toast } from "sonner";
 
@@ -82,11 +82,9 @@ const ManageRewardsPage = () => {
       columns={columns}
       rows={rewards}
       loading={loading}
-      initialState={{
-        sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
-      }}
+      initialState={dataGridProps.initialState}
       slots={{
-        loadingOverlay: LinearProgress,
+        ...dataGridProps.slots,
         footer: () => <Footer>
           <CreateRewardDialog add={add} />
           <GridPagination />
