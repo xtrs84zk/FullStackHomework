@@ -3,8 +3,8 @@ import { connectDatabase, getReward } from '../database';
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  await connectDatabase();
   const { id } = event.pathParameters!;
+  await connectDatabase();
   const reward = await getReward(id);
 
   if (!reward) {
