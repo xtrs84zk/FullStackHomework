@@ -6,3 +6,5 @@ export type Reward = {
   category: string;
   image: string;
 }
+
+export type RewardPayload = Omit<Reward, 'id'>;
