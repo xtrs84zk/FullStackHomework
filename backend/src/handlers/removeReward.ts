@@ -4,7 +4,6 @@ import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { withAuth } from '../utils/middleware';
 
 export const handler = withAuth(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  await connectDatabase();
   if (!event.pathParameters || !event.pathParameters.id) {
     return {
       statusCode: 400,
@@ -13,8 +12,9 @@ export const handler = withAuth(async (event: APIGatewayProxyEvent): Promise<API
       }),
     };
   }
-
+  
   const { id } = event.pathParameters;
+  await connectDatabase();
   const reward = await removeReward(id);
 
   if (!reward.acknowledged || !reward.deletedCount) {

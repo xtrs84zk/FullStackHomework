@@ -3,7 +3,16 @@ import { connectDatabase, getReward } from '../database';
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const { id } = event.pathParameters!;
+  if (!event.pathParameters || !event.pathParameters.id) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: 'Missing reward ID',
+      }),
+    };
+  }
+  
+  const { id } = event.pathParameters;
   await connectDatabase();
   const reward = await getReward(id);
 
