@@ -17,14 +17,17 @@ Globals:
     Layers:
       - !Ref RuntimeDependenciesLayer
     Environment:
-      # # Environment variables used by every function
-      # Variables:
-      #  SAMPLE_TABLE: !Ref SampleTable
     Architectures:
       - arm64
     Runtime: nodejs18.x
     MemorySize: 128
     Timeout: 100
+  Api:
+    Cors:
+      AllowOrigin: "'http://localhost:3001'"
+      AllowHeaders: "'Content-Type,Cookie'"
+      AllowMethods: "'*'"
+      AllowCredentials: true
 
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
