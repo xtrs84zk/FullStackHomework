@@ -8,9 +8,10 @@ export function withCookies(handler: (event: APIGatewayProxyEvent) => Promise<AP
     if (response.token) {
       let cookie = '';
       if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-        cookie = `token=${response.token}; HttpOnly; SameSite=Strict`;
+        cookie = `token=${response.token};`;
+      } else {
+        cookie = `token=${response.token}; HttpOnly; Secure; SameSite=Strict`;
       }
-      cookie = `token=${response.token}; HttpOnly; Secure; SameSite=Strict`;
       response.headers = response.headers || {};
       response.headers['Set-Cookie'] = cookie;
       delete response.token;
@@ -32,4 +33,21 @@ export function withAuth(handler: (event: APIGatewayProxyEvent) => Promise<APIGa
     }
     return await handler(event);
   }
+};
+
+export function withLogout(handler: (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult>) {
+  return async function (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+    const response = await handler(event);
+
+    let cookie = '';
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      cookie = `token=; Max-Age=0;`;
+    } else {
+      cookie = `token=; Max-Age=0; HttpOnly; Secure; SameSite=Strict`;
+    }
+    response.headers = response.headers || {};
+    response.headers['Set-Cookie'] = cookie;
+
+    return response;
+  };
 };

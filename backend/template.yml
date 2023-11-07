@@ -47,6 +47,20 @@ Resources:
             Path: /api/login
             Method: POST
 
+  LogoutFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: dist/handlers/logout.handler
+      Description: Logs out a user
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /api/logout
+            Method: POST
+
   CreateRewardFunction:
     Type: AWS::Serverless::Function
     Metadata:

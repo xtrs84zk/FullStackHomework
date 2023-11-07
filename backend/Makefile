@@ -4,6 +4,9 @@
 build-LoginFunction:
 	$(MAKE) HANDLER=src/handlers/login.ts build-lambda-common
 
+build-LogoutFunction:
+	$(MAKE) HANDLER=src/handlers/logout.ts build-lambda-common
+
 build-CreateRewardFunction:
 	$(MAKE) HANDLER=src/handlers/createReward.ts build-lambda-common
 
