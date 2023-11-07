@@ -14,3 +14,10 @@ export const DeleteIcon = styled(DeleteIconBase)`
   }
   transition: all 0.4s ease-in-out;
 `;
+
+export const Footer = styled.div`
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;

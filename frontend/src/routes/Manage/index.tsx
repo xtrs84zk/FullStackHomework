@@ -1,6 +1,7 @@
 import { useMemo } from "react";
-import { Container, DeleteIcon } from "./styles";
-import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
+import { Container, DeleteIcon, Footer } from "./styles";
+import { DataGrid, GridColDef, GridPagination, GridRowParams } from '@mui/x-data-grid';
+import CreateRewardDialog from "../../components/CreateRewardDialog";
 import { useMutableRewards } from "../../hooks/rewards";
 import { CellImage } from "../Rewards/styles";
 import LinearProgress from '@mui/material/LinearProgress';
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 
 const ManageRewardsPage = () => {
   const {
+    add,
     remove,
     rewards,
     loading
@@ -85,6 +87,10 @@ const ManageRewardsPage = () => {
       }}
       slots={{
         loadingOverlay: LinearProgress,
+        footer: () => <Footer>
+          <CreateRewardDialog add={add} />
+          <GridPagination />
+        </Footer>
       }}
     />
   </Container>;
