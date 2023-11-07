@@ -51,6 +51,8 @@ cd frontend
 npm start
 ```
 
+The username and password will be generated in the console when running the backend and connecting to a MongoDB database for the first time, they will be output in the console.
+
 ### Deployment
 
 ```bash
@@ -58,6 +60,53 @@ sam build
 sam deploy --guided
 ```
 Note: I couldn't figure out how to deploy the frontend with SAM, but the current progress can be seen in backend/buildspec.yml and the website section of the template.yml file.
+
+### Testing
+Get all rewards
+```bash
+curl "http://127.0.0.1:3000/api/rewards/"
+```
+
+Get a reward
+```bash
+curl "http://127.0.0.1:3000/api/rewards/ac47dae1-e759-4cca-96fc-d4df1e6d2d4a"
+```
+
+For endpoints that require authentication, the login endpoint has to be called to obtain the cookie.
+
+Login
+```bash
+curl -X "POST" "http://127.0.0.1:3000/api/login" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "username": "1366bed5d5ce75a0",
+  "password": "e5700597d5672f27"
+}'
+```
+
+Create reward
+```bash
+curl -X "POST" "http://127.0.0.1:3000/api/rewards/" \
+     -H 'Authorization: ' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -H 'Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxZjAyNTM0Ny04YzM2LTRkZjgtYmJjNy03MTM0N2IyNDNmMGIiLCJpYXQiOjE2OTkzNzIyOTAsImV4cCI6MTY5OTM3NTg5MH0.Ok8hSKtwuROWoAIPdtlfEUuL6XeESaUcxVPtbd6kynY' \
+     -d $'{
+  "description": "Picture of a character with a sword",
+  "image": "https://s3.amazonaws.com/uifaces/faces/twitter/jeremymouton/128.jpg",
+  "name": "Jackeline",
+  "category": "games",
+  "price": 67
+}'
+```
+
+Delete reward
+```bash
+curl -X "DELETE" "http://127.0.0.1:3000/api/rewards/ac47dae1-e759-4cca-96fc-d4df1e6d2d4a" \
+     -H 'Authorization: ' \
+     -H 'Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxZjAyNTM0Ny04YzM2LTRkZjgtYmJjNy03MTM0N2IyNDNmMGIiLCJpYXQiOjE2OTkzNzIyOTAsImV4cCI6MTY5OTM3NTg5MH0.Ok8hSKtwuROWoAIPdtlfEUuL6XeESaUcxVPtbd6kynY'
+```
+
+
 
 ### Questions to answer after implementation
 1. What is a JWT and how is it used in the context of authentication?
