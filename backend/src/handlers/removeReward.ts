@@ -12,22 +12,12 @@ export const handler = withAuth(async (event: APIGatewayProxyEvent): Promise<API
       }),
     };
   }
-  
+
   const { id } = event.pathParameters;
   await connectDatabase();
-  const reward = await removeReward(id);
-
-  if (!reward.acknowledged || !reward.deletedCount) {
-    return {
-      statusCode: 404,
-      body: JSON.stringify({
-        message: 'Reward not found',
-      }),
-    };
-  }
-
+  await removeReward(id);
   return {
-    statusCode: 200,
-    body: JSON.stringify(reward),
+    statusCode: 204,
+    body: JSON.stringify({}),
   };
 });
