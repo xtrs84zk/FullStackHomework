@@ -31,7 +31,7 @@ export const createRewardController = async (event: APIGatewayProxyEvent): Promi
     }
     const reward = await createReward(payload);
     return {
-      statusCode: 200,
+      statusCode: 201,
       body: JSON.stringify(reward),
     };
   } catch (err) {
