@@ -2,17 +2,9 @@ import 'source-map-support/register';
 import { connectDatabase, createReward } from '../database';
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isValidRewardPayload } from '../types/database';
-import { verifyEventToken } from '../utils/token';
+import { withAuth } from '../utils/middleware';
 
-export const createRewardController = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  try {
-    verifyEventToken(event);
-  } catch (err) {
-    return {
-      statusCode: 401,
-      body: JSON.stringify({ message: 'Unauthorized' }),
-    };
-  }
+export const handler = withAuth(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   if (!event.body) {
     return {
       statusCode: 400,
@@ -40,4 +32,4 @@ export const createRewardController = async (event: APIGatewayProxyEvent): Promi
       body: JSON.stringify({ message: 'Internal server error' }),
     };
   }
-};
+})

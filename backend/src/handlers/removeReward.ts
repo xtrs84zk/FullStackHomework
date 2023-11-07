@@ -1,8 +1,9 @@
 import 'source-map-support/register';
 import { connectDatabase, removeReward } from '../database';
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { withAuth } from '../utils/middleware';
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = withAuth(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   await connectDatabase();
   if (!event.pathParameters || !event.pathParameters.id) {
     return {
@@ -29,4 +30,4 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     statusCode: 200,
     body: JSON.stringify(reward),
   };
-};
+});

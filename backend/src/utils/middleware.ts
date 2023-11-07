@@ -1,4 +1,5 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { verifyEventToken } from "./token";
 
 export function withCookies(handler: (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult & { token?: string }>) {
   return async function (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
@@ -17,4 +18,18 @@ export function withCookies(handler: (event: APIGatewayProxyEvent) => Promise<AP
 
     return response;
   };
+};
+
+export async function withAuth(handler: (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult>) {
+  return async function (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+    try {
+      verifyEventToken(event);
+    } catch (err) {
+      return {
+        statusCode: 401,
+        body: JSON.stringify({ message: 'Unauthorized' }),
+      };
+    }
+    return await handler(event);
+  }
 };

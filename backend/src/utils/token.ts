@@ -26,27 +26,22 @@ export const verifyToken = (token: string) => {
   }
 }
 
-
-// TODO: explore using a cookie instead of Authorization header
-export const verifyEventCookie = (event: APIGatewayProxyEvent) => { 
-  const cookie = event.headers.Cookie;
-  if (!cookie) {
+export const verifyEventToken = (event: APIGatewayProxyEvent) => {
+  const cookieHeader = event.headers['Cookie'] || event.headers['cookie'];
+  if (!cookieHeader) {
     throw new Error('UNAUTHORIZED');
   }
-  const token = cookie.split('=')[1];
+
+  const cookies = cookieHeader.split('; ');
+  const tokenCookie = cookies.find(cookie => cookie.startsWith('token='));
+
+  if (!tokenCookie) {
+    throw new Error('UNAUTHORIZED');
+  }
+
+  const token = tokenCookie.split('=')[1];
   return verifyToken(token);
 };
-
-export const verifyEventToken = (event: APIGatewayProxyEvent) => {
-  // TODO: remove temporary workaround for local testing
-  return;
-  const token = event.headers.Authorization;
-  if (!token) {
-    throw new Error('UNAUTHORIZED');
-  }
-  return verifyToken(token);
-
-}
 
 export const refreshToken = (refreshToken: string) => {
   try {
