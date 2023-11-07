@@ -106,8 +106,7 @@ export const createReward = async (reward: RewardPayload) => {
   const id = uuid();
   const newReward = new Reward({ id, ...reward });
   await newReward.save();
-  const { name, category, price, description, image } = newReward.toObject();
-  return { id, name, category, price, description, image };
+  return extractReward(newReward.toObject());
 };
 
 export const getRewards = async () => {
