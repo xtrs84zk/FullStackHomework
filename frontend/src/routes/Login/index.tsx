@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useAuth } from "../../context/auth";
 import { Navigate, useNavigate } from "react-router-dom";
 import { authenticate } from "../../api/auth";
-import { REWARDS } from "../../constants";
+import { MANAGE_PATH } from "../../constants";
 import { Container } from "./styles";
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -20,7 +20,7 @@ const LoginPage = () => {
     try {
       const user = await authenticate(username, password);
       login(user);
-      navigate(REWARDS, { replace: true });
+      navigate(MANAGE_PATH, { replace: true });
       toast.success(`Welcome back ${user.name}`);
     } catch (err) {
       toast.error("Failed to login");
@@ -31,7 +31,7 @@ const LoginPage = () => {
     return <Container>
       <Typography variant="h4">Already logged in</Typography>
       <Typography variant="body1">Redirecting...</Typography>
-      <Navigate to={REWARDS} replace={true} />
+      <Navigate to={MANAGE_PATH} replace={true} />
     </Container>;
   }
   return <Container>
