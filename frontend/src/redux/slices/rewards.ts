@@ -2,36 +2,18 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Reward } from '../../types';
 
-const mockRows = [
-  {
-    id: "d9634c81-d539-4d81-868a-0eb0700f384b",
-    name: 'Example Reward 1',
-    category: 'Category 1',
-    price: 100,
-    description: 'Example Description 1',
-    image: 'https://picsum.photos/200/300'
-  },
-  {
-    id: "c89b5425-3d22-468f-8343-820202d7e1ff",
-    name: 'Example Reward 2',
-    category: 'Category 2',
-    price: 200,
-    description: 'Example Description 2',
-    image: 'https://picsum.photos/200/300'
-  },
-  {
-    id: "7158c483-c626-4d8f-bfb8-0732aa0a33ff",
-    name: 'Example Reward 3',
-    category: 'Category 3',
-    price: 300,
-    description: 'Example Description 3',
-    image: 'https://picsum.photos/200/300'
-  }
-] satisfies Reward[];
+type RewardsState = {
+  rewards: Reward[];
+  loading: boolean;
+  firstLoad: boolean;
+  error: null | string;
+};
 
-const initialState = {
-  rewards: mockRows as Reward[],
+const initialState: RewardsState = {
+  rewards: [],
   loading: false,
+  firstLoad: false,
+  error: null,
 };
 
 const rewardsSlice = createSlice({
@@ -43,6 +25,7 @@ const rewardsSlice = createSlice({
     },
     setRewards(state, action: PayloadAction<Reward[]>) {
       state.rewards = action.payload;
+      state.firstLoad = true;
     },
     removeReward(state, action: PayloadAction<Reward['id']>) {
       state.rewards = state.rewards.filter(reward => reward.id !== action.payload);
@@ -54,6 +37,12 @@ const rewardsSlice = createSlice({
         state.rewards[index] = action.payload;
       }
     },
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload;
+    },
+    setError(state, action: PayloadAction<string>) { 
+      state.error = action.payload;
+    }
   },
 });
 
@@ -61,7 +50,9 @@ export const {
   addReward,
   setRewards,
   removeReward,
-  updateReward
+  updateReward,
+  setLoading,
+  setError,
 } = rewardsSlice.actions;
 
 export default rewardsSlice.reducer;
