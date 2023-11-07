@@ -2,8 +2,9 @@ import 'source-map-support/register';
 import { connectDatabase, verifyUserByUsernameAndPassword } from '../database';
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { generateToken } from '../utils/token';
+import { withCookies } from '../utils/middleware';
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = withCookies(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult & { token?: string }> => {
   if (!event.body) {
     return {
       statusCode: 400,
@@ -27,7 +28,8 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     const { token } = generateToken(user.id);
     return {
       statusCode: 200,
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ message: 'Login successful', user }),
+      token,
     };
   } catch (err) {
     return {
@@ -37,4 +39,4 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }),
     };
   }
-};
+});
