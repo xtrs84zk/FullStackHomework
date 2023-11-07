@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import { toast } from 'sonner';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const LoginPage = () => {
 
   const onLogin = useCallback(async (username: string) => {
     await login(username);
+    toast.success(`Welcome ${username}!`);
     navigate(REWARDS, { replace: true });
   }, [navigate, login]);
 

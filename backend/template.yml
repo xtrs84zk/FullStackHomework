@@ -1,0 +1,122 @@
+# This is the SAM template that represents the architecture of your serverless application
+# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-template-basics.html
+
+# The AWSTemplateFormatVersion identifies the capabilities of the template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  backend
+
+# Transform section specifies one or more macros that AWS CloudFormation uses to process your template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
+Transform:
+  - AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Layers:
+      - !Ref RuntimeDependenciesLayer
+    Environment:
+      # # Environment variables used by every function
+      # Variables:
+      #  SAMPLE_TABLE: !Ref SampleTable
+    Architectures:
+      - arm64
+    Runtime: nodejs18.x
+    MemorySize: 128
+    Timeout: 100
+
+# Resources declares the AWS resources that you want to include in the stack
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
+Resources:
+  # Each Lambda function is defined by properties:
+  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+
+  # This is a Lambda function config associated with the source code: in src/handlers/example.ts
+  LoginFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: dist/handlers/login.handler
+      Description: Logs in a user
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /login
+            Method: POST
+
+  CreateRewardFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: dist/handlers/createReward.handler
+      Description: Creates a reward in the database
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /rewards
+            Method: POST
+
+  GetRewardsFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: dist/handlers/getRewards.handler
+      Description: Gets all rewards from the database
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /rewards
+            Method: GET
+
+  GetRewardFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: dist/handlers/getReward.handler
+      Description: Gets a reward from the database
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /rewards/{id}
+            Method: GET
+  
+  RemoveRewardFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: dist/handlers/removeReward.handler
+      Description: Removes a reward from the database
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /rewards/{id}
+            Method: DELETE
+
+  # Shared layer with Lambda runtime dependencies
+  RuntimeDependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      LayerName: "backend-dependencies"
+      Description: Runtime dependencies for Lambdas
+      ContentUri: ./
+      CompatibleRuntimes:
+        - nodejs18.x
+      RetentionPolicy: Retain
+
+Outputs:
+  WebEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
