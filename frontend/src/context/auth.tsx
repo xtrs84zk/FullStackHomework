@@ -7,10 +7,11 @@ type AuthContext =
   | { isAuthenticated: false; user: null; }
   | { isAuthenticated: true; user: User; }
 
-const initialState = {
-  isAuthenticated: false,
-  user: null,
-} satisfies AuthContext;
+const storedUser = localStorage.getItem(USER_KEY);
+const initialState: AuthContext = {
+  isAuthenticated: !!storedUser,
+  user: storedUser ? JSON.parse(storedUser) : null,
+};
 
 type AuthAction = { type: 'LOGIN', payload: { user: User } } | { type: 'LOGOUT' };
 
@@ -33,7 +34,6 @@ const reducer = (state: AuthContext, action: AuthAction): AuthContext => {
     }
     case 'LOGOUT': {
       localStorage.removeItem(USER_KEY);
-      // TODO: remove authorization cookie
       return initialState;
     }
     default:
