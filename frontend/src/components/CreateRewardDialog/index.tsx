@@ -19,6 +19,8 @@ export default function CreateRewardDialog({ add }: { add: (reward: RewardPayloa
   const [price, setPrice] = useState<RewardPayload['price']>(0);
   const [image, setImage] = useState<RewardPayload['image']>('');
 
+  let allowedCreation = name.length > 0 && description.length > 0 && category.length > 0 && price > 0 && image.length > 0;
+
   const onCreate = useCallback(async () => {
     const reward: RewardPayload = {
       name,
@@ -32,6 +34,7 @@ export default function CreateRewardDialog({ add }: { add: (reward: RewardPayloa
       await add(reward);
       toast.success('Reward created!');
     } catch (e) {
+      toast.error('Failed to create reward');
       console.error(e);
     } finally {
       handleClose();
@@ -120,7 +123,7 @@ export default function CreateRewardDialog({ add }: { add: (reward: RewardPayloa
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>{creating ? 'Close' : 'Cancel'}</Button>
-          {creating ? <CircularProgress /> : <Button onClick={onCreate}>Create</Button>}
+          {creating ? <CircularProgress /> : <Button variant='outlined' disabled={!allowedCreation} onClick={onCreate}>Create</Button>}
         </DialogActions>
       </Dialog>
     </>

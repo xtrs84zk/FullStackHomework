@@ -13,11 +13,11 @@ export const isValidRewardPayload = (payload: unknown): payload is RewardPayload
   const test = payload as RewardPayload;
   return (
     !!test &&
-    typeof test.name === 'string' &&
-    typeof test.description === 'string' &&
-    typeof test.price === 'number' &&
-    typeof test.category === 'string' &&
-    typeof test.image === 'string'
+    typeof test.name === 'string' && test.name.length > 0 &&
+    typeof test.description === 'string' && test.description.length > 0 &&
+    typeof test.price === 'number' && test.price > 0 &&
+    typeof test.category === 'string' && test.category.length > 0 &&
+    typeof test.image === 'string' && test.image.length > 0
   );
 };
 
